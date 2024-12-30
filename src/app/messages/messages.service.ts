@@ -1,8 +1,14 @@
-import {Injectable, signal} from "@angular/core";
-import {Message, MessageSeverity} from "../models/message.model";
+import {
+  Injectable,
+  signal
+} from "@angular/core";
+import {
+  Message,
+  MessageSeverity
+} from "../models/message.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class MessagesService {
 
@@ -10,14 +16,11 @@ export class MessagesService {
 
   message = this.#messageSignal.asReadonly();
 
-  showMessage(text:string, severity: MessageSeverity) {
-    this.#messageSignal.set({
-      text, severity
-    })
+  showMessage(text: string, severity: MessageSeverity) {
+    this.#messageSignal.set({ text, severity });
   }
 
   clear() {
     this.#messageSignal.set(null);
   }
-
 }

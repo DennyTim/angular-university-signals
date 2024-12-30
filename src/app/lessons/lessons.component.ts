@@ -1,33 +1,38 @@
-import {Component, ElementRef, inject, signal, viewChild} from '@angular/core';
-import {LessonsService} from "../services/lessons.service";
-import {Lesson} from "../models/lesson.model";
-import {LessonDetailComponent} from "./lesson-detail/lesson-detail.component";
+import {
+  Component,
+  ElementRef,
+  inject,
+  signal,
+  viewChild
+} from "@angular/core";
+import { Lesson } from "../models/lesson.model";
+import { LessonsService } from "../services/lessons.service";
+import { LessonDetailComponent } from "./lesson-detail/lesson-detail.component";
 
 @Component({
-  selector: 'lessons',
+  selector: "lessons",
   standalone: true,
   imports: [
     LessonDetailComponent
   ],
-  templateUrl: './lessons.component.html',
-  styleUrl: './lessons.component.scss'
+  templateUrl: "./lessons.component.html",
+  styleUrl: "./lessons.component.scss"
 })
 export class LessonsComponent {
 
-  mode = signal<'master' | 'detail'>("master");
+  mode = signal<"master" | "detail">("master");
   lessons = signal<Lesson[]>([]);
   selectedLesson = signal<Lesson | null>(null);
   lessonsService = inject(LessonsService);
+  searchInput = viewChild.required<ElementRef>("search");
 
-  searchInput = viewChild.required<ElementRef>('search');
-
-  async onSearch() {
+  public async onSearch() {
     const query = this.searchInput()?.nativeElement.value;
-    console.log('search query', query);
-    const results =
-      await this.lessonsService.loadLessons({query});
-    this.lessons.set(results);
+    console.log("query", query);
 
+    const results = await this.lessonsService.loadLessons({ query });
+
+    this.lessons.set(results);
   }
 
   onLessonSelected(lesson: Lesson) {
@@ -43,6 +48,5 @@ export class LessonsComponent {
     this.lessons.update(lessons =>
       lessons.map(l => l.id === lesson.id ? lesson : l)
     );
-
   }
 }
